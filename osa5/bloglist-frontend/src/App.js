@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react' //useState ja useEffect hookit
-import Blog from './components/Blog'
 import blogService from './services/blogs' //tuodaan blogService objekti
 import loginService from './services/login' //tuodaan loginService objekti
 
+import BlogShow from './components/BlogShow' //tuodaan BlogShow komponentti
 import LoginForm from './components/LoginForm' //tuodaan LoginForm komponentti
 
+import ErrorMessage from './components/ErrorMessage' //tuodaan ErrorMessage komponenttis
+
+import UserShow from './components/UserShow' //tuodaan UserShow komponentti
+
+import NewBlogForm from './components/NewBlogForm' //tuodaan NewBlogForm komponentti
+
+
+// Alustetaan virheilmoitukselle arvo false, kontrolloi onko punainen vai ei
+let errorhappened = false
 
 
 const App = () => {
@@ -12,9 +21,7 @@ const App = () => {
   const [username, setUsername] = useState('') //käyttäjän antama käyttäjätunnus // statessa olevaan muuttujaan ei camelcasea vaan setteriin
   const [password, setPassword] = useState('') //käyttäjän antama salasana
   const [user, setUser] = useState(null) //käyttäjä, joka on kirjautunut sisään
-  const [errormessage, setErrormessage] = useState(null) //virheilmoitus, jos kirjautuminen epäonnistuu
-
-  const [successmessage, setSuccessmessage] = useState(null) //5.4 onnistumisilmoitus, jos kirjautuminen onnistuu
+  const [errormessage, setErrormessage] = useState(null) //virheilmoitus tallentuu tänne
 
   //5.3
   const [newtitle, setNewtitle] = useState('') //käyttäjän antama uuden blogin title
@@ -80,61 +87,18 @@ const App = () => {
 
 
     } catch (exception) {
+      errorhappened = true //virheilmoitus on punainen
       setErrormessage('wrong credentials') //asetetaan virheilmoitus
       console.log('wrong credentials')
       console.log('exception: ', exception)
       alert('wrong credentials')
       setTimeout(() => { //5 sekunnin kuluttua virheilmoitus poistuu
-        setErrormessage(null)
+        setErrormessage(null); errorhappened = false //virheilmoitus poistuu
       }, 5000)
     }
   }
 
 
-
-
-
-
-  //blogilistan apufunktio näyttämään blogit
-  const blogShow = () => (
-    <div>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
-
-
-  //5.3 //renderöi blogin lisäämislomakkeen, laitetaan myöhemmin omaan komponenttiin
-  const newBlog = () => (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={addBlog}>
-        <div>
-          title:
-          <input
-            value={newtitle}
-            onChange={({ target }) => setNewtitle(target.value)}
-          />
-        </div>
-        <div>
-          author:
-          <input
-            value={newauthor}
-            onChange={({ target }) => setNewauthor(target.value)}
-          />
-          </div>
-        <div>
-          url:
-          <input
-            value={newurl}
-            onChange={({ target }) => setNewurl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>
-    </div>
-  )
 
 
   //5.3 //blogin lisäämisen funktio
@@ -153,69 +117,39 @@ const App = () => {
         setNewtitle('')
         setNewauthor('')
         setNewurl('')
-        setSuccessmessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`)
+        setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselle
         setTimeout(() => {
-          setSuccessmessage(null)
+          setErrormessage(null)
         }, 5000)
       })
   }
 
 
 
-
-
-  const userShow = () => (
-    <div>
-      <p>{user.name} logged in</p>
-    </div>
-  )
-
-
-  //5.2 logout
+  //5.2 logout funktio
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
   }
 
 
-
-
-
-
-  //Now login, logout and bloglist show is working
-  //GOING TO RECFACTOR THIS TO COMPONENTS
-
+  //shows loginform if user is not logged in, shows blogs if user is logged in
   return (
     <div>
-
-      {errormessage}
-      {successmessage}
-
+      <ErrorMessage message={errormessage} errorhappened={errorhappened} />
 
       {user === null ?
         <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword}/> :
         
-
         <div>
           <h2>blogs</h2>
-          {userShow()}
-          <button onClick={handleLogout}>logout</button>
-          {newBlog()}
-          {blogShow()}
-
+          <UserShow name={user.name} handleLogout={handleLogout} />
+          <NewBlogForm addBlog={addBlog} newtitle={newtitle} setNewtitle={setNewtitle} newauthor={newauthor} setNewauthor={setNewauthor} newurl={newurl} setNewurl={setNewurl} />
+          <BlogShow blogs={blogs} />
         </div>}
-
 
     </div>)
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -28,6 +28,8 @@ const App = () => {
   const [newauthor, setNewauthor] = useState('') //käyttäjän antama uuden blogin author
   const [newurl, setNewurl] = useState('') //käyttäjän antama uuden blogin url
 
+  const [newblogformvisible, setNewblogformvisible] = useState(false) //5.5 kontrolloi blogin lisäämislomakkeen
+
 
 
   useEffect(() => {
@@ -117,6 +119,7 @@ const App = () => {
         setNewtitle('')
         setNewauthor('')
         setNewurl('')
+        setNewblogformvisible(false) //5.5 closes new blog form when blog is posted
         setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselle
         setTimeout(() => {
           setErrormessage(null)
@@ -144,8 +147,11 @@ const App = () => {
         <div>
           <h2>blogs</h2>
           <UserShow name={user.name} handleLogout={handleLogout} />
-          <NewBlogForm addBlog={addBlog} newtitle={newtitle} setNewtitle={setNewtitle} newauthor={newauthor} setNewauthor={setNewauthor} newurl={newurl} setNewurl={setNewurl} />
+
+          <NewBlogForm addBlog={addBlog} newtitle={newtitle} setNewtitle={setNewtitle} newauthor={newauthor} setNewauthor={setNewauthor} newurl={newurl} setNewurl={setNewurl} newblogformvisible={newblogformvisible} setNewblogformvisible={setNewblogformvisible} />
+
           <BlogShow blogs={blogs} />
+
         </div>}
 
     </div>)

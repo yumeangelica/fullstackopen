@@ -10,7 +10,7 @@ import ErrorMessage from './components/ErrorMessage' //tuodaan ErrorMessage komp
 import UserShow from './components/UserShow' //tuodaan UserShow komponentti
 
 import NewBlogForm from './components/NewBlogForm' //tuodaan NewBlogForm komponentti
-
+import Togglable from './components/Togglable' //tuodaan Togglable komponentti
 
 // Alustetaan virheilmoitukselle arvo false, kontrolloi onko punainen vai ei
 let errorhappened = false
@@ -24,11 +24,11 @@ const App = () => {
   const [errormessage, setErrormessage] = useState(null) //virheilmoitus tallentuu tänne
 
   //5.3
-  const [newtitle, setNewtitle] = useState('') //käyttäjän antama uuden blogin title
-  const [newauthor, setNewauthor] = useState('') //käyttäjän antama uuden blogin author
-  const [newurl, setNewurl] = useState('') //käyttäjän antama uuden blogin url
+  // const [newtitle, setNewtitle] = useState('') //käyttäjän antama uuden blogin title //siirretty komponennttiin NewBlogForm
+  // const [newauthor, setNewauthor] = useState('') //käyttäjän antama uuden blogin author
+  // const [newurl, setNewurl] = useState('') //käyttäjän antama uuden blogin url
 
-  const [newblogformvisible, setNewblogformvisible] = useState(false) //5.5 kontrolloi blogin lisäämislomakkeen
+ 
 
 
 
@@ -104,28 +104,21 @@ const App = () => {
 
 
   //5.3 //blogin lisäämisen funktio
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: newtitle,
-      author: newauthor,
-      url: newurl
-    }
-
+  const addBlog = (blogObject) => {
+    
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewtitle('')
-        setNewauthor('')
-        setNewurl('')
-        setNewblogformvisible(false) //5.5 closes new blog form when blog is posted
-        setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselle
+        
+      
+        setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselles
         setTimeout(() => {
           setErrormessage(null)
         }, 5000)
       })
   }
+ 
 
 
 
@@ -142,13 +135,16 @@ const App = () => {
       <ErrorMessage message={errormessage} errorhappened={errorhappened} />
 
       {user === null ?
-        <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword}/> :
-        
+        <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
+
         <div>
           <h2>blogs</h2>
           <UserShow name={user.name} handleLogout={handleLogout} />
 
-          <NewBlogForm addBlog={addBlog} newtitle={newtitle} setNewtitle={setNewtitle} newauthor={newauthor} setNewauthor={setNewauthor} newurl={newurl} setNewurl={setNewurl} newblogformvisible={newblogformvisible} setNewblogformvisible={setNewblogformvisible} />
+
+          <Togglable buttonLabel="new blog"> 
+            <NewBlogForm addBlog={addBlog}></NewBlogForm>
+          </Togglable>
 
           <BlogShow blogs={blogs} />
 

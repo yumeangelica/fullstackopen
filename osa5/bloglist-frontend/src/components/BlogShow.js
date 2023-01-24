@@ -1,6 +1,6 @@
 import Blog from "./Blog"
 
-const BlogShow = ({blogs}) => {
+const BlogShow = ({ blogs }) => {
     return (
 
         <div>

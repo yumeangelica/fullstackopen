@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react' //useState ja useEffect hookit
+import { useState, useEffect, useRef } from 'react' //useState, useEffect ja useRef hookit
 import blogService from './services/blogs' //tuodaan blogService objekti
 import loginService from './services/login' //tuodaan loginService objekti
 
@@ -22,21 +22,24 @@ const App = () => {
   const [password, setPassword] = useState('') //käyttäjän antama salasana
   const [user, setUser] = useState(null) //käyttäjä, joka on kirjautunut sisään
   const [errormessage, setErrormessage] = useState(null) //virheilmoitus tallentuu tänne
-
+  const blogFormRef = useRef() //käytetään reffiä, jotta komponentti voidaan piilottaa 
   //5.3
   // const [newtitle, setNewtitle] = useState('') //käyttäjän antama uuden blogin title //siirretty komponennttiin NewBlogForm
   // const [newauthor, setNewauthor] = useState('') //käyttäjän antama uuden blogin author
   // const [newurl, setNewurl] = useState('') //käyttäjän antama uuden blogin url
 
  
-
+  const sortBlogs = async () => { //5.10 sortataan blogit
+    const blogs = await blogService.getAll() //haetaan kaikki blogit
+    blogs.sort((a, b) => b.likes - a.likes) //sortataan blogit suurimmasta pienimpään
+    setBlogs(blogs) //asetetaan blogit stateen
+  }
 
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
-      setBlogs(blogs)
-    })
-  }, [])
+    sortBlogs() //5.10
+  }, []) //tyhjä array, jotta efekti ajetaan vain kerran
+
 
 
   //5.2 haetaan localstoragesta käyttäjä, jos käyttäjä löytyy, asetetaan käyttäjä stateen. näin käyttäjä pysyy kirjautuneena
@@ -51,14 +54,11 @@ const App = () => {
 
 
 
-
-
-
   //kirjautumisen apufunktio
   const handleLogin = async (event) => {
     event.preventDefault()
     console.log('logging in with', username, password)
-
+    
     try {
       const user = await loginService.login({ //tehdään login pyyntö loginServiceen
         username, password
@@ -73,10 +73,10 @@ const App = () => {
 
       //asetetaan token blogServiceen
       blogService.setToken(user.token)
-
+      
       //asetetaan käyttäjä stateen
       setUser(user)
-
+      
       //asetetaan käyttäjätunnus ja salasana tyhjiksi
       setUsername('')
       setPassword('')
@@ -105,7 +105,7 @@ const App = () => {
 
   //5.3 //blogin lisäämisen funktio
   const addBlog = (blogObject) => {
-    
+    blogFormRef.current.toggleVisibility() //päästään kiinni kyseiseen komponenttiin, jotta sen funktioita voidaan kutsua
     blogService
       .create(blogObject)
       .then(returnedBlog => {
@@ -113,6 +113,7 @@ const App = () => {
         
       
         setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselles
+        sortBlogs() //sortataan blogit uudelleen lisäyksen jälkeen
         setTimeout(() => {
           setErrormessage(null)
         }, 5000)
@@ -126,6 +127,28 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
+  }
+
+  const handleBlogUpdate = async (blogId, updatedBlog) => { //5.8 blogin päivitys, kaikkien tietojen päivitys
+    try {
+      const blog = await blogService.update(blogId, updatedBlog) //tehdään pyyntö backendiin, läheteään blogin id ja päivitetty blogi objekti
+      console.log('blog updated')
+      return blog
+    } catch (exception) {
+      console.log('exception: ', exception)
+    }
+  }
+
+  const handleBlogDelete = async (blogId) => { //5.9 blogin poisto
+    
+    try {
+      await blogService.deleteBlog(blogId) //tehdään pyyntö backendiin, läheteään blogin id
+      console.log('blog deleted')
+      sortBlogs() //sortataan blogit uudelleen poiston jälkeen
+    } catch (exception) {
+      console.log('exception: ', exception)
+    }
+    
   }
 
 
@@ -142,11 +165,12 @@ const App = () => {
           <UserShow name={user.name} handleLogout={handleLogout} />
 
 
-          <Togglable buttonLabel="new blog"> 
+          <Togglable buttonLabel="new blog" ref={blogFormRef}> 
             <NewBlogForm addBlog={addBlog}></NewBlogForm>
           </Togglable>
+          
 
-          <BlogShow blogs={blogs} />
+          <BlogShow blogs={blogs} updateBlog={handleBlogUpdate} deleteBlog={handleBlogDelete}/>
 
         </div>}
 

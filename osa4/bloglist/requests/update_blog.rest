@@ -1,9 +1,0 @@
-PUT http://localhost:3003/api/blogs/63928392114f73c893bd2a4e
-Content-Type: application/json
-
-{ 
-    "title": "angel numbers",
-    "author": "Angel",
-    "url": "www.angel.fi",
-    "likes": 9999
-}

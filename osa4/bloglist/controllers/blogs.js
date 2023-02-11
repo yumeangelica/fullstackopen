@@ -34,7 +34,14 @@ blogsRouter.get('/:id', async (request, response) => {
 //blogin lisäys
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
-  // const token = getTokenFrom(request) //haetaan token
+  
+  const decodedToken = jwt.verify(request.token, process.env.SECRET) //tarkistetaan token
+  console.log(`decodedToken = ${decodedToken.id}`)
+  if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+
   const user = request.user 
 
   if (!user) {
@@ -73,26 +80,29 @@ blogsRouter.post('/', async (request, response) => {
 // blogin poisto
 blogsRouter.delete('/:id', async (request, response) => { //async funktio
 
-  const blog = await Blog.findById(request.params.id) //haetaan blogi id:n perusteella
+  const user = request.user
+  const blogToBeDeleted = await Blog.findById(request.params.id) //haetaan blogi id:n perusteella
 
-  if (!blog) {
+  if (!blogToBeDeleted) {
     return response.status(404).json({ error: 'not found' }) //404 = not found
   }
 
-  const user = request.user
-
-  if (user.id.toString() === blog.user.toString()) {
-  
+  if (String(user.id) === String(blogToBeDeleted.user)) {
+    
     await Blog //odotetaan että blogi poistetaan
       .findByIdAndDelete(request.params.id) //poistetaan blogi id:n perusteella
-    user.blogs = user.blogs.filter(blogId => blogId.toString() !== request.params.id) //poistetaan käyttäjän blogi listasta jos id ei ole sama kuin userId, kuolleet blogit poistetaan
+    
+    user.blogs = user.blogs.filter(blog => String(blog) !== String(blogToBeDeleted.id)) //poistetaan käyttäjän blogi listasta jos id ei ole sama kuin userId, kuolleet blogit poistetaan
+    
     await user.save() //tallennetaan käyttäjä tietokantaan
-    return response.status(204).send() //204 = no content kun blogi on poistettu
+    response.status(204).send() //204 = no content kun blogi on poistettu
     
   } else {
 
-    return response.status(401).json({ error: 'auth needed'}) //401 = unauthorized jos käyttäjä ei ole kirjautunut sisään
+    response.status(401).json({ error: 'auth needed'}).end() //401 = unauthorized jos käyttäjä ei ole kirjautunut sisään
   }
+
+  
 
 })
 

@@ -5,15 +5,18 @@ import loginService from './services/login' //tuodaan loginService objekti
 import BlogShow from './components/BlogShow' //tuodaan BlogShow komponentti
 import LoginForm from './components/LoginForm' //tuodaan LoginForm komponentti
 
-import ErrorMessage from './components/ErrorMessage' //tuodaan ErrorMessage komponenttis
+
+import { ValidMessage, ErrorMessage } from './components/Message'
+
 
 import UserShow from './components/UserShow' //tuodaan UserShow komponentti
 
 import NewBlogForm from './components/NewBlogForm' //tuodaan NewBlogForm komponentti
 import Togglable from './components/Togglable' //tuodaan Togglable komponentti
 
-// Alustetaan virheilmoitukselle arvo false, kontrolloi onko punainen vai ei
+// Alustetaan ilmoitukselle arvo false, kontrolloi onko punainen vai vihreä ilmoitus
 let errorhappened = false
+let validhappened = false
 
 
 const App = () => {
@@ -21,14 +24,13 @@ const App = () => {
   const [username, setUsername] = useState('') //käyttäjän antama käyttäjätunnus // statessa olevaan muuttujaan ei camelcasea vaan setteriin
   const [password, setPassword] = useState('') //käyttäjän antama salasana
   const [user, setUser] = useState(null) //käyttäjä, joka on kirjautunut sisään
-  const [errormessage, setErrormessage] = useState(null) //virheilmoitus tallentuu tänne
-  const blogFormRef = useRef() //käytetään reffiä, jotta komponentti voidaan piilottaa 
-  //5.3
-  // const [newtitle, setNewtitle] = useState('') //käyttäjän antama uuden blogin title //siirretty komponennttiin NewBlogForm
-  // const [newauthor, setNewauthor] = useState('') //käyttäjän antama uuden blogin author
-  // const [newurl, setNewurl] = useState('') //käyttäjän antama uuden blogin url
 
- 
+  const [validmessage, setValidmessage] = useState(null) //ilmoitus tallentuu tänne
+  const [errormessage, setErrormessage] = useState(null) //virheilmoitus tallentuu tänne
+
+  const blogFormRef = useRef() //käytetään reffiä, jotta komponentti voidaan piilottaa
+
+
   const sortBlogs = async () => { //5.10 sortataan blogit
     const blogs = await blogService.getAll() //haetaan kaikki blogit
     blogs.sort((a, b) => b.likes - a.likes) //sortataan blogit suurimmasta pienimpään
@@ -57,8 +59,8 @@ const App = () => {
   //kirjautumisen apufunktio
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
-    
+
+
     try {
       const user = await loginService.login({ //tehdään login pyyntö loginServiceen
         username, password
@@ -73,10 +75,10 @@ const App = () => {
 
       //asetetaan token blogServiceen
       blogService.setToken(user.token)
-      
+
       //asetetaan käyttäjä stateen
       setUser(user)
-      
+
       //asetetaan käyttäjätunnus ja salasana tyhjiksi
       setUsername('')
       setPassword('')
@@ -87,13 +89,15 @@ const App = () => {
         setBlogs(blogs)
       )
 
-
-    } catch (exception) {
+      validhappened = true //eilmoitus on vihreä
+      setValidmessage(`login with ${username}`) //asetetaan vihreä ilmoitus onnistuneelle kirjautumiselle
+      setTimeout(() => { //5 sekunnin kuluttua ilmoitus poistuu
+        setValidmessage(null); validhappened = false //ilmoitus poistuu
+      }, 5000)
+    } catch (err) {
       errorhappened = true //virheilmoitus on punainen
       setErrormessage('wrong credentials') //asetetaan virheilmoitus
-      console.log('wrong credentials')
-      console.log('exception: ', exception)
-      alert('wrong credentials')
+
       setTimeout(() => { //5 sekunnin kuluttua virheilmoitus poistuu
         setErrormessage(null); errorhappened = false //virheilmoitus poistuu
       }, 5000)
@@ -106,20 +110,27 @@ const App = () => {
   //5.3 //blogin lisäämisen funktio
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility() //päästään kiinni kyseiseen komponenttiin, jotta sen funktioita voidaan kutsua
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
+    try {
+      blogService.create(blogObject).then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        
-      
-        setErrormessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä virheilmoitus onnistuneelle lisäykselles
+
+        validhappened = true //ilmoitus on vihreä
+
+        setValidmessage(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added`) //asetetaan vihreä ilmoitus onnistuneelle lisäykselles
         sortBlogs() //sortataan blogit uudelleen lisäyksen jälkeen
         setTimeout(() => {
-          setErrormessage(null)
+          setValidmessage(null); validhappened = false //ilmoitus poistuu
         }, 5000)
       })
+    } catch (err) {
+      errorhappened = true //virheilmoitus on punainen
+      setErrormessage('blog could not be added', err) //asetetaan virheilmoitus
+      setTimeout(() => { //5 sekunnin kuluttua virheilmoitus poistuu
+        setErrormessage(null); errorhappened = false //virheilmoitus poistuu
+      }, 5000)
+    }
   }
- 
+
 
 
 
@@ -127,37 +138,64 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
+    validhappened = true //ilmoitus on vihreä
+    setValidmessage('logout successful') //asetetaan vihreä ilmoitus onnistuneelle uloskirjautumiselle
+    setTimeout(() => { //5 sekunnin kuluttua ilmoitus poistuu
+      setValidmessage(null); validhappened = false //ilmoitus poistuu
+    }, 5000)
+
   }
 
   const handleBlogUpdate = async (blogId, updatedBlog) => { //5.8 blogin päivitys, kaikkien tietojen päivitys
     try {
       const blog = await blogService.update(blogId, updatedBlog) //tehdään pyyntö backendiin, läheteään blogin id ja päivitetty blogi objekti
-      console.log('blog updated')
+
+      validhappened = true //ilmoitus on vihreä
+      setValidmessage(`blog ${blog.title} by ${blog.author} updated`) //asetetaan vihreä ilmoitus onnistuneelle päivitykselle
+      setTimeout(() => { //5 sekunnin kuluttua ilmoitus poistuu
+        setValidmessage(null); validhappened = false //ilmoitus poistuu
+      }, 5000)
+
       return blog
-    } catch (exception) {
-      console.log('exception: ', exception)
+    } catch (err) {
+      errorhappened = true //virheilmoitus on punainen
+      setErrormessage('blog could not be updated', err) //asetetaan virheilmoitus
+      setTimeout(() => { //5 sekunnin kuluttua virheilmoitus poistuu
+        setErrormessage(null); errorhappened = false //virheilmoitus poistuu
+      }, 5000)
     }
   }
 
   const handleBlogDelete = async (blogId) => { //5.9 blogin poisto
-    
+
     try {
-      await blogService.deleteBlog(blogId) //tehdään pyyntö backendiin, läheteään blogin id
-      console.log('blog deleted')
+      const deleted = await blogService.deleteBlog(blogId) //tehdään pyyntö backendiin, läheteään blogin id
+
+      validhappened = true //ilmoitus on vihreä
+      setValidmessage(`blog ${deleted.title} by ${deleted.author} deleted`) //asetetaan vihreä ilmoitus onnistuneelle poistolle
+      setTimeout(() => { //5 sekunnin kuluttua ilmoitus poistuu
+        setValidmessage(null); validhappened = false //ilmoitus poistuu
+      }, 5000)
+
       sortBlogs() //sortataan blogit uudelleen poiston jälkeen
-    } catch (exception) {
-      console.log('exception: ', exception)
+    } catch (err) {
+      errorhappened = true //virheilmoitus on punainen
+      setErrormessage('blog could not be deleted', err) //asetetaan virheilmoitus
+      setTimeout(() => { //5 sekunnin kuluttua virheilmoitus poistuu
+        setErrormessage(null); errorhappened = false //virheilmoitus poistuu
+      }, 5000)
     }
-    
+
   }
 
 
   //shows loginform if user is not logged in, shows blogs if user is logged in
   return (
     <div>
+      <ValidMessage message={validmessage} validhappened={validhappened} />
       <ErrorMessage message={errormessage} errorhappened={errorhappened} />
-
       {user === null ?
+
         <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
 
         <div>
@@ -165,10 +203,10 @@ const App = () => {
           <UserShow name={user.name} handleLogout={handleLogout} />
 
 
-          <Togglable buttonLabel="new blog" ref={blogFormRef}> 
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
             <NewBlogForm addBlog={addBlog}></NewBlogForm>
           </Togglable>
-          
+
 
           <BlogShow blogs={blogs} updateBlog={handleBlogUpdate} deleteBlog={handleBlogDelete}/>
 

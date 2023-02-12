@@ -7,7 +7,6 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   const [ likes, setLikes ] = useState(blog.likes) //5.9 likes state jotta voidaan päivittää likesit reaaliaikaisesti
-  likes
 
   const blogStyle = {
     paddingTop: 5,

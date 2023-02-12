@@ -30,7 +30,7 @@ const create = async newObject => {
 
 
 //tekee put pyynnön backendiin ja palauttaa päivitetyn blogin
-const update = async (id, newObject) => { 
+const update = async (id, newObject) => {
   const response = await axios.put(`${baseUrl}/${id}`, newObject)
   console.log('updating: response.data: ', response.data)
   return response.data

@@ -89,13 +89,15 @@ blogsRouter.delete('/:id', async (request, response) => { //async funktio
 
   if (String(user.id) === String(blogToBeDeleted.user)) {
     
-    await Blog //odotetaan että blogi poistetaan
+    const deleted = await Blog //odotetaan että blogi poistetaan
       .findByIdAndDelete(request.params.id) //poistetaan blogi id:n perusteella
     
+    response.send(deleted) //palautetaan poistettu blogi
+
     user.blogs = user.blogs.filter(blog => String(blog) !== String(blogToBeDeleted.id)) //poistetaan käyttäjän blogi listasta jos id ei ole sama kuin userId, kuolleet blogit poistetaan
     
     await user.save() //tallennetaan käyttäjä tietokantaan
-    response.status(204).send() //204 = no content kun blogi on poistettu
+    response.status(204).end() //204 = no content kun blogi on poistettu
     
   } else {
 

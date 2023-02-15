@@ -31,7 +31,7 @@ const BlogForm = ({ addBlog }) => { //addBlog on funktio, joka on App.js:ssä
 
                 <div>
                     title:
-                    <input
+                    <input id="blogtitle"
                         value={newtitle}
                         onChange={({ target }) => setNewtitle(target.value)}
                         className="titleInput"
@@ -39,7 +39,7 @@ const BlogForm = ({ addBlog }) => { //addBlog on funktio, joka on App.js:ssä
                 </div>
                 <div>
                     author:
-                    <input
+                    <input id="blogauthor"
                         value={newauthor}
                         onChange={({ target }) => setNewauthor(target.value)}
                         className="authorInput"
@@ -48,14 +48,14 @@ const BlogForm = ({ addBlog }) => { //addBlog on funktio, joka on App.js:ssä
 
                 <div>
                     url:
-                    <input
+                    <input id="blogurl"
                         value={newurl}
                         onChange={({ target }) => setNewurl(target.value)}
                         className="urlInput"
                     />
                 </div>
 
-                <button id='create-blog-button' type="submit">save</button>
+                <button id='blogsubmit' type="submit">save</button>
             </form>
         </div>
     )

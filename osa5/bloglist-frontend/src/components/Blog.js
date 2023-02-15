@@ -3,7 +3,7 @@ import { useState } from 'react'
 // import blogService from "../services/blogs"
 
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => { // Blogin renderöivä komponentti
+const Blog = ({ blog, updateBlog, deleteBlog, user }) => { // Blogin renderöivä komponentti
     const [isVisible, setIsVisible] = useState(false)
 
     const [bloglikes, setBloglikes] = useState(blog.likes) //5.9 likes state jotta voidaan päivittää likesit reaaliaikaisesti
@@ -59,7 +59,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => { // Blogin renderöivä komp
     return (
         <>
 
-            <div style={blogStyle}>
+            <div style={blogStyle} className='blog'>
                 {blog.title}{blog.title && blog.author ? ' - ' : ''}{blog.author}<button onClick={handleVisibility}>{isVisible ? 'hide' : 'view'}</button>
                 {isVisible ?
                     <div>
@@ -68,7 +68,9 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => { // Blogin renderöivä komp
                     </div>
                     : <></>
                 }
-                <button onClick={handleRemove}>remove</button>
+                
+                {blog.user.username === user.username ? <button onClick={handleRemove}>remove</button> : <></>}
+                
 
             </div>
 

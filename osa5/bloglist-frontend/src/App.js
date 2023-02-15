@@ -192,7 +192,7 @@ const App = () => {
 
                 <LoginForm handleLogin={handleLogin} username={username} password={password} setUsername={setUsername} setPassword={setPassword} /> :
 
-                <div>
+                <div id="allblogs">
                     <h2>blogs</h2>
                     <UserShow name={user.name} handleLogout={handleLogout} />
 
@@ -202,7 +202,7 @@ const App = () => {
                     </Togglable>
 
 
-                    <BlogShow blogs={blogs} updateBlog={handleBlogUpdate} deleteBlog={handleBlogDelete} />
+                    <BlogShow blogs={blogs} updateBlog={handleBlogUpdate} deleteBlog={handleBlogDelete} user={user} />
 
                 </div>}
 

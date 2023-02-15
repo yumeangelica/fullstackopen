@@ -39,6 +39,11 @@ app.use('/api/blogs', middleware.userExtractor, blogsRouter) //käytetään rout
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter) //käytetään login routeria, käytetään reittiä /api/login
 
+if (process.env.NODE_ENV === 'test') { //testi router
+    const testingRouter = require('./controllers/testing')
+    app.use('/api/testing', testingRouter)
+  }
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 

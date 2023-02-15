@@ -105,8 +105,6 @@ const App = () => {
     }
 
 
-
-
     //5.3 //blogin lisäämisen funktio
     const addBlog = (blogObject) => {
         blogFormRef.current.toggleVisibility() //päästään kiinni kyseiseen komponenttiin, jotta sen funktioita voidaan kutsua
@@ -130,8 +128,6 @@ const App = () => {
             }, 5000)
         }
     }
-
-
 
 
     //5.2 logout funktio
@@ -182,8 +178,7 @@ const App = () => {
 
     }
 
-
-    //shows loginform if user is not logged in, shows blogs if user is logged in
+    //jos käyttäjä on kirjautunut sisään, näytetään blogilista, muuten loginform
     return (
         <div>
             <ValidMessage message={validmessage} validhappened={validhappened} />

@@ -34,10 +34,7 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => { // Blogin renderöiv�
 
         //kutsutaan blogService.update funktiota, joka päivittää blogin
         updateBlog(blog.id, updatedBlog)
-        //päivitetään likesit reaaliaikaisesti stateen
-        // .then(blog => { //kutsuu updateBlog funktiota, joka päivittää blogin
-        //     setLikes(blog.likes) //päivitetään likesit reaaliaikaisesti stateen
-        // })
+
     }
 
     const handleRemove = (event) => { //5.10

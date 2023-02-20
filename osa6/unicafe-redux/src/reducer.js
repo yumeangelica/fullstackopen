@@ -5,7 +5,6 @@ const initialState = { // tänne tallennetaan staten alkuarvot
 }
 
 const counterReducer = (state = initialState, action) => { // tämä funktio saa parametrina state:n ja actionin
-    console.log(action)
     switch (action.type) { // tämä switch-case lauseke tarkistaa actionin tyypin
         case "GOOD":
             return { ...state, good: state.good + 1 } // tämä palauttaa uuden staten, jossa on lisätty yksi good

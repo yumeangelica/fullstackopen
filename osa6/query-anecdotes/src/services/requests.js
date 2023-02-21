@@ -9,6 +9,7 @@ const getAnecdotes = async () => { // haetaan anekdootit
 
     } catch (error) { // jos kysely epäonnistuu, tulostetaan virhe
         console.log('error: ', error)
+        
     }
 }
 
@@ -20,6 +21,7 @@ const addAnecdote = async (newAnecdote) => { // lisätään anekdootti
 
     } catch (error) { // jos kysely epäonnistuu, tulostetaan virhe
         console.log('error: ', error)
+        
     }
 }
 

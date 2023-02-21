@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from "react-query"
 import { addAnecdote } from "../services/requests"
 
+import { useNotificationDispatch } from '../NotificationContext' // importataan contextin dispatch funktio
+
 const AnecdoteForm = () => {
+    const dispatch = useNotificationDispatch() // luodaan dispatch funktio, jotta voidaan kutsua sitä
 
     const queryClient = useQueryClient() // tarvitaan, jotta voidaan päivittää dataa
 
@@ -9,15 +12,25 @@ const AnecdoteForm = () => {
         onSuccess: (newAnecdote) => { 
             const oldAnecdotes = queryClient.getQueryData('anecdotes') // haetaan vanhat anekdootit
             queryClient.invalidateQueries('anecdotes', oldAnecdotes.concat(newAnecdote)) // lisätään uusi anekdootti vanhojen joukkoon
-        },
-        onError: () => {
-            setTimeout(() => {
 
+            dispatch({ type: 'create', payload: `you created: ${newAnecdote.content}` }) // kutsutaan dispatch funktiota, joka asettaa uuden tilan
+            setTimeout(() => { // poistetaan ilmoitus 5 sekunnin kuluttua
+                dispatch({ type: 'clear' })
+            }, 5000)
+        },
+        onError: () => { // error tapauksessa
+            dispatch({ 
+                type: 'create', 
+                payload: `too short anecdote, must have length 5 or more`, 
+            }) // kutsutaan dispatch funktiota, joka asettaa uuden tilan error tapauksessa
+
+            setTimeout(() => { // poistetaan ilmoitus 5 sekunnin kuluttua
+                dispatch({ type: 'clear' })
             }, 5000)
         }
     })
 
-    const onCreate = async (event) => {
+    const onCreate = async (event) => { // luodaan uusi anekdootti
         event.preventDefault()
         const content = event.target.anecdote.value
         event.target.anecdote.value = ''

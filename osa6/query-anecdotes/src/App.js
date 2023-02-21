@@ -4,7 +4,12 @@ import Notification from './components/Notification'
 import { getAnecdotes, updateAnecdoteVote } from './services/requests'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 
+import { useNotificationDispatch } from './NotificationContext' // importataan contextin dispatch funktio
+
+
 const App = () => {
+    const dispatch = useNotificationDispatch() // luodaan dispatch funktio, jotta voidaan kutsua sitä
+
     const queryClient = useQueryClient() // luodaan queryClient, jotta voidaan päivittää dataa
 
     // päivitetään anekdootin äänet
@@ -17,6 +22,11 @@ const App = () => {
     // päivitetään anekdootin äänet
     const handleVote = async (anecdote) => {
         updateAnecdoteVoteMutation.mutate(anecdote)
+
+        dispatch({ type: 'create', payload: `you voted: ${anecdote.content}` })
+		setTimeout(() => { // poistetaan ilmoitus 5 sekunnin kuluttua
+			dispatch({ type: 'clear' })
+		}, 5000)
     }
 
     // paluuarvo on olio, joka kertoo kyselyn tilan. pilkotaan olio eri muuttujiin

@@ -187,7 +187,7 @@ const App = () => {
 
     //jos käyttäjä on kirjautunut sisään, näytetään blogilista, muuten loginform
     return (
-        <div>
+        <div className="container"> {/* 7.20 otetaan käyttään bootstrapin container */}
             <ValidMessage
                 message={validmessage}
                 validhappened={validhappened}

@@ -1,0 +1,51 @@
+{
+  "notes": [
+    {
+      "id": 1,
+      "content": "custom hooks are awesome"
+    },
+    {
+      "id": 2,
+      "content": "best feature ever <3"
+    },
+    {
+      "content": "miiu",
+      "id": 3
+    },
+    {
+      "content": "miu",
+      "id": 4
+    },
+    {
+      "content": "mauku",
+      "id": 5
+    }
+  ],
+  "persons": [
+    {
+      "id": 1,
+      "name": "Matti Luukkainen",
+      "number": "040-12344565"
+    },
+    {
+      "id": 2,
+      "name": "Tarja Halonen",
+      "number": "040-2223334"
+    },
+    {
+      "name": "mauku",
+      "number": "123123",
+      "id": 3
+    },
+    {
+      "name": "asda",
+      "number": "1231231",
+      "id": 4
+    },
+    {
+      "name": "miuku",
+      "number": "6969",
+      "id": 5
+    }
+  ]
+}

@@ -34,3 +34,19 @@ Button {
     border-radius: 5px;
 }
 
+
+/* Tyylitellään elementtejä, otsikot ym. */
+h1 {
+    font-size: 45px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: rgb(118, 4, 118);
+}
+
+h2 {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: rgb(118, 4, 118);
+}
+

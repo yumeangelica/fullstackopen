@@ -1,3 +1,8 @@
+//importataan tyylittelyyn boostrapin komponentit
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
+
 //5.3 ja 5.6 //blogin lisäämisen lomake ja sen käsittely
 
 import { useState } from 'react'
@@ -27,36 +32,43 @@ const BlogForm = ({ addBlog }) => { //addBlog on funktio, joka on App.js:ssä
     return (
         <div>
             <h3>Create a new blog</h3>
-            <form onSubmit={addBlogHandle}>
+            <Form onSubmit={addBlogHandle}>
+                <Form.Group>
 
-                <div>
-                    title:
-                    <input id="blogtitle"
+                    <Form.Label>Title:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="title"
                         value={newtitle}
                         onChange={({ target }) => setNewtitle(target.value)}
-                        className="titleInput"
                     />
-                </div>
-                <div>
-                    author:
-                    <input id="blogauthor"
+
+
+
+                    <Form.Label>Author:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="author"
                         value={newauthor}
                         onChange={({ target }) => setNewauthor(target.value)}
-                        className="authorInput"
                     />
-                </div>
 
-                <div>
-                    url:
-                    <input id="blogurl"
+
+
+                    <Form.Label>Url:</Form.Label>
+                    <Form.Control
+                        type="text"
+                        name="url"
                         value={newurl}
                         onChange={({ target }) => setNewurl(target.value)}
-                        className="urlInput"
                     />
-                </div>
 
-                <button id='blogsubmit' type="submit">save</button>
-            </form>
+
+
+                    <Button variant='success' id='blogsubmit' type="submit">save</Button>
+
+                </Form.Group>
+            </Form>
         </div>
     )
 

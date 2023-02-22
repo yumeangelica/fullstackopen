@@ -217,7 +217,7 @@ const App = () => {
                 />
             ) : (
                 <div id="allblogs">
-                    <h2>blogs</h2>
+                    <h1>blogs</h1>
                     <UserShow name={user.name} handleLogout={handleLogout} />
 
                     <Togglable buttonLabel="new blog" ref={blogFormRef}>

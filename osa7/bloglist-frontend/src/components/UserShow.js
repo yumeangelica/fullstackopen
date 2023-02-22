@@ -1,8 +1,11 @@
+import Button from 'react-bootstrap/Button' //tuodaan Button komponentti bootstrapista
+
+
 const userShow = ({ name, handleLogout }) => {
     return (
         <div>
             <p>{name} logged in</p>
-            <button onClick={handleLogout}>logout</button>
+            <Button variant='dark' onClick={handleLogout}>logout</Button>
         </div>
     )
 }

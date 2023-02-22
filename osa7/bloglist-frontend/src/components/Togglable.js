@@ -1,6 +1,8 @@
 import { useState, useImperativeHandle, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 
+import { Button } from 'react-bootstrap' //tuodaan Button komponentti bootstrapista
+
 
 const Togglable = forwardRef((props, ref) => { //props.children sisältää komponentin sisällön viittaa komponenttiin, joka on Togglable komponentin sisällä
     const [visible, setVisible] = useState(false) //komponentti näkyy aluksi
@@ -23,10 +25,10 @@ const Togglable = forwardRef((props, ref) => { //props.children sisältää komp
     return (
         <div>
             <div style={hideWhenVisible}>
-                <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+                <Button onClick={toggleVisibility}>{props.buttonLabel}</Button>
             </div>
             <div style={showWhenVisible}>
-                <button onClick={toggleVisibility}>cancel</button>
+                <Button variant='warning' onClick={toggleVisibility}>cancel</Button>
                 {props.children}
             </div>
         </div>

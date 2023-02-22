@@ -12,6 +12,11 @@ import UserShow from './components/UserShow' //tuodaan UserShow komponentti
 import NewBlogForm from './components/NewBlogForm' //tuodaan NewBlogForm komponentti
 import Togglable from './components/Togglable' //tuodaan Togglable komponentti
 
+
+import Alert from 'react-bootstrap/Alert'; //tuodaan Alert komponentti bootstrapista
+
+
+
 // Alustetaan ilmoitukselle arvo false, kontrolloi onko punainen vai vihreä ilmoitus
 let errorhappened = false
 let validhappened = false
@@ -188,14 +193,20 @@ const App = () => {
     //jos käyttäjä on kirjautunut sisään, näytetään blogilista, muuten loginform
     return (
         <div className="container"> {/* 7.20 otetaan käyttään bootstrapin container */}
-            <ValidMessage
+            {/* <ValidMessage
                 message={validmessage}
                 validhappened={validhappened}
-            />
-            <ErrorMessage
+            /> */}
+            {/* <ErrorMessage
                 message={errormessage}
                 errorhappened={errorhappened}
-            />
+            /> */}
+
+            {validmessage && <Alert variant='success'>{validmessage}</Alert>}
+
+            {errormessage && <Alert variant='danger'>{errormessage}</Alert>}
+
+
             {user === null ? (
                 <LoginForm
                     handleLogin={handleLogin}

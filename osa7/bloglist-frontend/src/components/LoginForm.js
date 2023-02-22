@@ -11,17 +11,17 @@ const LoginForm = ({ handleLogin, username, password, setUsername, setPassword }
                 <Form.Group>
 
 
-                    <Form.Label>username:</Form.Label>
+                    <Form.Label>Username:</Form.Label>
 
                     <Form.Control
                         type="text"
                         name="username"
                         value={username}
                         onChange={({ target }) => setUsername(target.value)}
-                    />s
+                    />
 
 
-                    <Form.Label>password:</Form.Label>
+                    <Form.Label>Password:</Form.Label>
 
                     <Form.Control
                         type="password"

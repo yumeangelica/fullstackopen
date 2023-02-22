@@ -27,3 +27,10 @@
    ;
 }
 
+
+/* Tyylitellään bootstrapin Button componenttia */
+Button {
+    margin: 3px;
+    border-radius: 5px;
+}
+

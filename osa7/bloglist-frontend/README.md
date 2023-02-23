@@ -1,1 +1,1 @@
-# Fullstack open -kurssin osan 5 tehtävät. Rakennetaan osan 4 back-endille front-end.
+# Fullstack open -kurssin osan 7 tehtävät. Käytetään osan 4 backendia

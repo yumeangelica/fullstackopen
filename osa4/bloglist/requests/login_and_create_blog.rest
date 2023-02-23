@@ -22,8 +22,8 @@ Content-Type: application/json
 Authorization: bearer {{authToken}}
 
 { 
-    "title": "Miuku bloggaa taas vol 5",
+    "title": "Miuku  taas vol 5",
     "author": "miuku",
-    "likes": 10,
-    "url": "www.miuku.fi"
+    "likes": 15,
+    "url": "www.miuu.fi"
 }

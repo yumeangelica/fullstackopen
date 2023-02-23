@@ -56,5 +56,14 @@ usersRouter.post('/', async (request, response) => { //async funktio joka lisä�
     response.status(201).json(savedUser) //201 = created
 })
 
+usersRouter.get('/:id', async (request, response) => { //async funktio joka palauttaa yksittäisen käyttäjän
+    const user = await User.findById(request.params.id)
+    if (user) { //jos käyttäjä löytyy
+        response.json(user.toJSON())
+    } else { //jos käyttäjää ei löydy
+        response.status(404).end()
+    }
+})
+
 
 module.exports = usersRouter //viedään käyttäjä routeri käyttöön app.js tiedostossa

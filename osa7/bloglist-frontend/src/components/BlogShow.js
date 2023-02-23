@@ -1,22 +1,20 @@
 import Blog from './Blog'
-import Table from 'react-bootstrap/Table';
+import Table from 'react-bootstrap/Table'
 
 
-const BlogShow = ({ blogs, updateBlog, deleteBlog, user }) => {
+const BlogShow = ({ blogs }) => {
 
     return (
         <Table striped>
             <tbody>
-
-                <tr>
-                    {blogs.map(blog =>
-                        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} deleteBlog={deleteBlog} user={user} />
-                    )}
-                </tr>
-
+                {blogs.map(blog =>
+                    <Blog key={blog.id} blog={blog} />
+                )}
             </tbody>
         </Table>
     )
 }
 
 export default BlogShow
+
+

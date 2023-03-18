@@ -5,11 +5,14 @@ import axios from 'axios'
 
 const App = () => {
 
-  // luodaan taulukko johon tallennetaan maan tiedot
+  // kaikki maat tallennetaan countries-taulukkoon
   const [countries, setCountries] = useState([])
 
-  // kontrolloi lomakkeen syötettä
+  // input kentän syöte tallennetaan searchCountry tilaan
   const [searchCountry, setSearchCountry] = useState('')
+
+  // filtteröidyt maat tallennetaan filteredCountryList-taulukkoon
+  const [filteredCountryList, setfilteredCountryList] = useState([])
 
 
   // Haetaan maatiedot axiosilla
@@ -28,25 +31,17 @@ const App = () => {
   useEffect(hook, [])
 
 
-  //console logataan countries-taulukko
-  // console.log('countries', countries)
 
-
-  // tallennetaan etsityt maat countryList-taulukkoon
-  let countryList = []
-
-  // jos hakukenttä on tyhjä, ei näytetä mitään
-  if (searchCountry === '') {
-    countryList = []
-  } else { // muuten etsitään hakusanan mukaisia maita ja tallennetaan ne countryList-taulukkoon
-    countryList = countries.filter(country => country.name.common.toLowerCase().includes(searchCountry.toLowerCase()))
-  }
-
-
-  // käsittelee country inputin syötteen muutokset reaaliaikaisesti, value tallentuu setsearchCountry tilaan
+  // aina kun inputtia muokataan niin kutsutaan handleCountryChange funktiota
   const handleCountryChange = (event) => {
-    // console.log(event.target.value)
     setSearchCountry(event.target.value)
+
+    // jos hakukenttä on tyhjä, filtteröity lista on tyhjä
+    if (searchCountry === '') {
+        setfilteredCountryList([])
+    } else { // muuten etsitään hakusanan mukaisia maita ja tallennetaan ne filteredCountryList-taulukkoon
+        setfilteredCountryList(countries.filter(country => country.name.common.toLowerCase().includes(searchCountry.toLowerCase())))
+  }
   }
 
 
@@ -58,7 +53,7 @@ const App = () => {
         onChange={handleCountryChange}
       />
 
-      <AllCountries countries={countryList} action={setSearchCountry} />
+      <AllCountries filteredCountryList={filteredCountryList} setfilteredCountryList={setfilteredCountryList} setSearchCountry={setSearchCountry} />
 
     </div>
   )
@@ -140,25 +135,28 @@ const CountryShow = ({ country }) => {
 
 
 // Näyttää kaikki maat
-const AllCountries = ({ countries, action }) => {
+const AllCountries = ({ filteredCountryList, setfilteredCountryList, setSearchCountry }) => {
 
-  if (countries.length > 10) { // jos maat.length > 10, näytetään vain viesti ja kehotetaan tarkentamaan hakua
+  if (filteredCountryList.length > 10) { // jos maat.length > 10, näytetään vain viesti ja kehotetaan tarkentamaan hakua
     return <p>Too many matches, specify another filter</p>
-  } // jos maat.length on alle 10 ja yli 1 niin näytetään maat mappaamalla ne countries-taulukosta
+  } // jos maat.length on alle 10 ja yli 1 niin näytetään maat mappaamalla ne filteredCountryList-taulukosta
   //lisätään nappi jota painamalla maan tiedot näytetään, koska maan nimi asetetaan hakukenttään
-  else if (countries.length <= 10 && countries.length > 1) {
+  else if (filteredCountryList.length <= 10 && filteredCountryList.length > 1) {
     return (
       <div>
-        {countries.map(country =>
+        {filteredCountryList.map(country =>
           <div key={country.name.common}>
-            {country.name.common} <button onClick={() => action(country.name.common)}>show</button>
+            {country.name.common} <button onClick={() => {
+                setSearchCountry(country.name.common) // asetetaan hakukenttään maan nimi
+                setfilteredCountryList([country]) // asetetaan filtteröityyn listaan yhden maan tiedot
+            }}>show</button>
           </div>)}
       </div>
     )
   } // jos maat.length on 1, näytetään maan tiedot listan ekasta indeksistä
-  else if (countries.length === 1) {
+  else if (filteredCountryList.length === 1) {
     return (
-      <CountryShow country={countries[0]} />
+      <CountryShow country={filteredCountryList[0]} />
     )
   }
 }

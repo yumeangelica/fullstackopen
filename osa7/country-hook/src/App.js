@@ -44,11 +44,11 @@ const useCountry = (name) => {
 // komponentti, joka renderöi maan tiedot
 const Country = ({ country }) => { // ottaan parametrina country objektin statesta
     
-    if (!country) {
+    if (!country) { // jos country on tyhjä, ei renderöidä mitään
         return
     }
 
-    if (!country.found) {
+    if (!country.found) { // jos maata ei löydy, renderöidään not found...
         return (
             <div>
                 not found...
@@ -56,41 +56,39 @@ const Country = ({ country }) => { // ottaan parametrina country objektin states
         )
     }
 
-    return (
-        <div>
+    return ( // renderöidään maan tiedot
+        <>
             <h3>{country.data.name}</h3>
             <div>capital {country.data.capital}</div>
             <div>population {country.data.population}</div>
             <img src={country.data.flag} height='100' alt={`flag of ${country.data.name}`} />
-        </div>
+        </>
     )
 
 } 
 
 
-
-
 // pääkomponentti
 const App = () => {
-    const nameInput = useField('text')
-    const [name, setName] = useState('')
-    const country = useCountry(name) // käytetään custom hookia mikä palauttaa country state
+    const nameInput = useField('text') // käytetään custom hookia mikä palauttaa inputin tiedot
+    const [name, setName] = useState('') // alustetaan name state
+    const country = useCountry(name) // käytetään custom hookia mikä palauttaa maan tiedot
 
     const fetch = (e) => {
-        e.preventDefault()
-        setName(nameInput.value)
+        e.preventDefault() // estetään lomakkeen lähettäminen
+        setName(nameInput.value) // asetetaan name stateen inputin value
     }
 
     return (
-        <div>
-            <form onSubmit={fetch}> {/* kutsutaan fetch funktiota */}
+        <>
+            <form onSubmit={fetch}> {/* kutsutaan fetch funktiota kun submitataan */}
                 <input {...nameInput} />
                 <button>find</button>
             </form>
 
-            <Country country={country} />
+            <Country country={country} /> {/* renderöidään maan tiedot */}
             
-        </div>
+        </>
     )
 }
 

@@ -11,14 +11,14 @@ import { useField } from './hooks/index' // 7.4 custom hooks
 // Anecdote-komponentti, joka näyttää yhden anekdootin
 const Anecdote = ({ anecdotes, vote }) => {
     const id = useParams().id // params muuttaa id:n stringiksi
-    const anecdote = anecdotes.find(n => n.id === Number(id))
+    const anecdote = anecdotes.find(n => n.id === Number(id)) // etsitään anekdootti id:n perusteella
     
     return (
-        <div>
+        <>
             <h2>{anecdote.content} by {anecdote.author}</h2>
             <p>has {anecdote.votes} votes</p><button onClick={() => vote(anecdote)}>Vote</button>
             <p>for more info see <a href={anecdote.url}>{anecdote.url}</a></p>
-        </div>
+        </>
     )
 
 }
@@ -26,7 +26,7 @@ const Anecdote = ({ anecdotes, vote }) => {
 // AnecdoteList-komponentti, joka näyttää anekdootit listana
 const AnecdoteList = ({ anecdotes }) => {
     return (
-        <div>
+        <>
             <h2>Anecdotes</h2>
             <ul>
                 {anecdotes.map(anecdote =>
@@ -34,14 +34,14 @@ const AnecdoteList = ({ anecdotes }) => {
                         <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
                     </li>)}
             </ul>
-        </div>
+        </>
     )
 }
 
 
 // About-komponentti, joka näyttää about-sivun
 const About = () => (
-    <div>
+    <>
         <h2>About anecdote app</h2>
         <p>According to Wikipedia:</p>
 
@@ -51,16 +51,16 @@ const About = () => (
             An anecdote is "a story with a point."</em>
 
         <p>Software engineering is full of excellent anecdotes, at this app you can find the best and add more.</p>
-    </div>
+    </>
 )
 
 // Footer-komponentti, joka näyttää footerin
 const Footer = () => (
-    <div>
+    <>
         Anecdote app for <a href='https://fullstackopen.com/'>Full Stack Open</a>.
 
         See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
-    </div>
+    </>
 )
 
 
@@ -96,7 +96,7 @@ const CreateNew = (props) => {
     }
 
     return (
-        <div>
+        <>
             <h2>create a new anecdote</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -114,7 +114,7 @@ const CreateNew = (props) => {
                 <button>create</button>
                 <button onClick={resetFields}>reset</button>
             </form>
-        </div>
+        </>
     )
 
 }

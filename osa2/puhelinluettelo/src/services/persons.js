@@ -1,9 +1,9 @@
 import axios from 'axios'
-const baseUrl = 'http://localhost:3001/persons'
+const baseUrl = '/api/persons' // backendin osoite
 
 
 const getAll = () => {
-	return axios.get(baseUrl)
+	return axios.get(baseUrl) // palauttaa kaiken datan databasesta
 }
 
 const create = (newPerson) => {

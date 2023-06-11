@@ -7,7 +7,6 @@ import NewPersonForm from './components/NewPersonsForm'
 import ErrorMessage from './components/ErrorMessage'
 
 
-
 //Importataan personService moduuli mikä sisältää axios-kutsut
 import personService from './services/persons'
 
@@ -80,18 +79,6 @@ const App = () => {
 
 
 
-  // LUODAAN ID JOKA ON YKSILÖLLINEN
-  let unique_id = 0 //alustetaan unique_id muuttuja 0
-
-  // luodaan algoritmi joka generoi uniikin id:n, eikä mene sekaisin vaikka henkilöitä poistetaan välillä
-  if (persons.length > 0) {
-    unique_id = persons[persons.length - 1].id + Math.random() * 10000
-    unique_id = Math.floor(unique_id)
-  }
-
-
-
-
   // tapahtumankäsittelijä lomakkeen lähettämiseen kun submit painiketta painetaan
   const addName = (event) => {
     event.preventDefault()
@@ -100,7 +87,6 @@ const App = () => {
     // luodaan uusi henkilöolio uniikilla id:llä, nimi tulee input kentästä ja id tulee persons taulukon pituudesta +1
     const nameObject = {
       name: newName,
-      id: unique_id, // asetetaan tähän unique_id, pitäisikö jättää palvelimen vastuulle generoida id??
       number: newNumber
     }
 
@@ -173,6 +159,20 @@ const App = () => {
           }, 3000)
 
         })
+        // jos lisäys ei onnistu, catchataan virhe
+        .catch(error => {
+          console.log('error', error.response.data) // error.response.data sisältää virheilmoituksen, console.logataan virhe
+
+          //asetetaan virheilmoitus, kun henkilöä ei löydy
+          setErrorMessage( // asetetaan virheilmoitus näkyviin
+            error.response.data.error
+          )
+          setTimeout(() => { // asetetaan 3 sekunnin ajan virheilmoitus näkyviin
+            setErrorMessage(null)
+          }, 3000)
+
+        }
+        )
     }
 
     //tyhjennetään lomakkeen input kenttä, asetetaan uusi tila newNamelle ja newNumberille

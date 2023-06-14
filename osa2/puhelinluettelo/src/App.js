@@ -210,7 +210,7 @@ const App = () => {
 
   // App renderöi Filter-komponentin, NewPersonForm-komponentin ja FilteredPersonsShow-komponentin
   return (
-    <div>
+    <div className="container"> {/* container on bootstrapin luokka, joka keskittää sivun sisällön */}
       <h1>Phonebook</h1>
       <ErrorMessage message={errorMessage} errorhappened={errorhappened} />
 
@@ -220,7 +220,11 @@ const App = () => {
 
       <h2>add a new</h2>
 
-      <NewPersonForm newName={newName} newNumber={newNumber} functions={[addName, handleNameChange, handleNumberChange]} />
+      <NewPersonForm 
+      newName={newName} 
+      newNumber={newNumber} 
+      functions={[addName, handleNameChange, handleNumberChange]} 
+      />
 
       <h2>Numbers</h2>
 

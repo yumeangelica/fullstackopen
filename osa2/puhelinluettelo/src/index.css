@@ -25,3 +25,17 @@
   border-radius: 4px;
   border: solid 1px black;
 }
+
+
+
+.input-width {
+    max-width: 300px;
+}
+
+
+
+.submit-btn {
+  margin-left: 5px;
+  margin-top: 10px;
+  border-radius: 4px;
+}

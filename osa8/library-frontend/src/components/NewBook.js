@@ -6,21 +6,31 @@ import { ADD_BOOK } from '../queries'
 
 
 
-const NewBook = (props) => {
+const NewBook = ({show}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [published, setPublished] = useState('')
     const [genre, setGenre] = useState('')
     const [genres, setGenres] = useState([])
 
+    console.log('title', title)
+    console.log('author', author)
+    console.log('published', published)
+    console.log('genres', genres)
+
     const [addBook] = useMutation(ADD_BOOK) // 8.10 use the useMutation hook to send the mutation to the server
 
-    if (!props.show) {
+    if (!show) {
         return null
     }
 
     const submit = async (event) => {
         event.preventDefault()
+
+        console.log('title', title)
+        console.log('author', author)
+        console.log('published', published)
+        console.log('genres', genres)
     
         console.log('add book...')
     
@@ -29,6 +39,7 @@ const NewBook = (props) => {
     
         // Call the addBook mutation here with the parsed integer value
         addBook({ variables: { title, author, published: parsedPublished, genres } })
+        
     
         setTitle('')
         setPublished('')

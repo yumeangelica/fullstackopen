@@ -2,13 +2,17 @@ import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import Select from 'react-select'
 
-import { EDIT_AUTHOR } from '../queries' // 8.11 - 8.12 import the mutation
+import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries' // 8.11 - 8.12 import the mutation
 
+import { useQuery } from '@apollo/client' // 8.8 import the gql and useQuery functions
 
+const Authors = ({ show }) => { // 8.8 add the authorsResult prop to the Authors component
 
-
-
-const Authors = ({ show, authorsResult }) => { // 8.8 add the authorsResult prop to the Authors component
+    // 8.8 use the useQuery hook to send the query to the server   
+    const authorsResult = useQuery(ALL_AUTHORS, {
+        pollInterval: 2000 // 8.10 set the pollInterval to 2 seconds
+    }) 
+    // console.log(authorsResult)
 
     const [name, setName] = useState('') // 8.11 - 8.12 add the name state variable
     const [birthYear, setBirthYear] = useState('')
@@ -44,7 +48,6 @@ const Authors = ({ show, authorsResult }) => { // 8.8 add the authorsResult prop
     }
 
 
-
     return (
         <>
             <h2>authors</h2>
@@ -53,13 +56,13 @@ const Authors = ({ show, authorsResult }) => { // 8.8 add the authorsResult prop
                     <tr>
                         <th></th>
                         <th>born</th>
-                        <th>books</th>
+                        <th>book count</th>
                     </tr>
                     {authors.map((a) => (
                         <tr key={a.name}>
                             <td>{a.name}</td>
                             <td>{a.born}</td>
-                            <td>{a.bookCount}</td>
+                            <td>{a.bookCount.length}</td>
                         </tr>
                     ))}
                 </tbody>

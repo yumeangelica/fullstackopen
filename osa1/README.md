@@ -1,1 +1,1 @@
-# Fullstack Open kurssin osan 1 vastaukset
+# Fullstackopen course part 1 tasks

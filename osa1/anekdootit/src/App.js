@@ -1,18 +1,15 @@
 import { useState } from 'react'
 
 
-
-//button komponentti
-const Button = (props) => {
+const Button = ({handleClick, text}) => { // button component
   return (
-    <button onClick={props.handleClick}>{props.text}</button>
+    <button onClick={handleClick}>{text}</button>
   )
 }
 
 
 const App = () => {
-  //lista anekdooteista
-  const anecdotes = [
+  const anecdotes = [ // list of anecdotes
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
     'The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.',
@@ -22,45 +19,40 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when dianosing patients.'
   ]
 
-  //sovelluksen tila
-  const [selected, setSelected] = useState(0)
-  const [points, setPoints] = useState(Array(anecdotes.length).fill(0))
 
-  //äänestys toiminnallisuus, kopioi pisteet taulukkoon ja lisää yhden pisteet valitulle anekdootille
-  const voteAnecdote = () => {
+  const [selected, setSelected] = useState(0) // state for selected anecdote
+  const [points, setPoints] = useState(Array(anecdotes.length).fill(0)) // state for points, initialize with 0s
+
+  const voteAnecdote = () => { // voting functionality, copy points array and add one to selected anecdote
     const pointsCopy = [...points]
     pointsCopy[selected] += 1
     setPoints(pointsCopy)
     console.log(pointsCopy)
   }
 
-  //satunnainen anekdootti laskee satunnaisen numeron väliltä 0 - listaan kuuluvien anekdoottien määrä ja asettaa sen tilaan
-  const randomAnecdote = () => {
+
+  const randomAnecdote = () => { // set random anecdote index to selected
     setSelected(Math.floor(Math.random() * anecdotes.length))
   }
 
-  //haetaan eniten ääniä saanut anekdootti
-  const maxPoints = () => Math.max(...points)
+  const maxPoints = () => Math.max(...points) // find anecdote with most votes
 
 
-
+  
   return (
-    <div>
+    <>
       <h1>Anecdote of the day</h1>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
 
-
       <Button handleClick={() => voteAnecdote()} text="vote" />
       <Button handleClick={() => randomAnecdote()} text="next anecdote" />
-
 
       <h1>Anecdote with most votes</h1>
       <p>{anecdotes[points.indexOf(maxPoints())]}</p>
       <p>has {maxPoints()} votes</p>
 
-
-    </div >
+    </>
   )
 }
 

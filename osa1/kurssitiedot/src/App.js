@@ -1,61 +1,39 @@
-//renderöi kurssin nimen
-const Header = (props) => {
-
-  return <h1>{props.name}</h1>
+const Header = ({name}) => { // render header
+  return <h1>{name}</h1>
 }
 
-
-//renderöi osat contentin sisällä
-const Content = (props) => {
-
-  //propsien sisältö, parts lista
-  const contents = props.parts
-  
-  //renderöidään osat
+const Content = ({parts}) => { // component for rendering parts
     return (
-      <div>
-        {contents.map((osa, i) => <Part key={i} name={osa.name} exercises={osa.exercises} />)}
-      </div>
+      <>
+        {parts.map((osa, i) => <Part key={i} name={osa.name} exercises={osa.exercises} />)}
+      </>
     )
 }
 
 
-
-//renderöi yhden osan tiedot
-const Part = (props) => {
-  
-  //renderöidään osan nimi ja tehtävien määrä
+const Part = ({name, exercises}) => { // component for rendering part name and exercises
   return (
-    <div>
-      <p>{props.name} {props.exercises}</p>
-    </div>
+    <>
+      <p>{name} {exercises}</p>
+    </>
   )
-  
 }
 
-//renderöi tehtävien yhteismäärän
-const Total = (props) => {
-  let total = 0 //tehtävien yhteismäärä alustetaan nollaksi
+const Total = ({parts}) => { // component to render total number of exercises
+  let total = 0 // total number of exercises
 
-  const content = props.parts //propsien sisältö, parts lista
+  parts.map((osa, i) => total += osa.exercises) // loop through parts and add exercises to total
 
-  //käydään parts lista läpi ja lisätään tehtävien määrät yhteen
-  for (let i = 0; i < content.length; i++) {
-    total += content[i].exercises
-  }
-
-  //renderöidään yhteismäärä
   return (
-    <div>
+    <>
       <p>Number of exercises {total}</p>
-    </div>
+    </>
   )
 }
+
 
 const App = () => {
-
-  //propsien arvot course objectina, sisältää nimen ja parts listan
-  const course = {
+  const course = { // course object
     name: 'Half Stack application development',
     parts: [
       {
@@ -74,15 +52,12 @@ const App = () => {
   }
 
 
-  //lähetetään propsit Headerille, Contentille ja Totalille ja renderöidään elementit
   return (
-    <div>
+    <>
       <Header name={course.name} />
-      
       <Content parts={course.parts} />
-      
       <Total parts={course.parts} />
-    </div>
+    </>
   )
 }
 

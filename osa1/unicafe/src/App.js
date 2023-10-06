@@ -1,33 +1,24 @@
 import { useState } from 'react'
 
-
-//statistics komponentti
-const Statistics = (props) => {
-  const good = props.good
-  const neutral = props.neutral
-  const bad = props.bad
+const Statistics = ({good, neutral, bad}) => { // statistics component
   
-  // lasketaan keskiarvo
-  const average = (props.good - props.bad) / (props.good + props.neutral + props.bad).toFixed(2)
-  
-  // lasketaan positiivisten osuus
-  const positive = ((props.good / (props.good + props.neutral + props.bad)) * 100).toFixed(2) + ' %'
+  const average = ((good - bad) / (good + neutral + bad)).toFixed(2)
+  const positive = ((good / (good + neutral + bad)) * 100).toFixed(2) + ' %'
+  const all = good + neutral + bad
 
-  // lasketaan kaikki palautteet yhteen
-  const all = props.good + props.neutral + props.bad
-
-  //jos ei ole palautetta, näytä no feedback given
-  if (props.good === 0 && props.neutral === 0 && props.bad === 0) {
+  // if there is no feedback given yet show this
+  if (good === 0 && neutral === 0 && bad === 0) {
     return (
-      <div>
+      <>
         <h1>statistics</h1>
         <p>No feedback given</p>
-      </div>
+      </>
     )
-  }  //jos on palautetta, näytä statistics
+  } 
 
+  // if there is feedback given show this
   return (
-    <div>
+    <>
       <h1>statistics</h1>
       <table>
         <tbody>
@@ -39,29 +30,26 @@ const Statistics = (props) => {
           <StatisticLine text='positive' value={positive} />
         </tbody>
       </table>
-    </div>
+    </>
   )
 }
 
 
-// button komponentti
-const Button = (props) => {
+// button component
+const Button = ({handleClick, text}) => {
   return (
-    <button onClick={props.handleClick}>{props.text}</button>
+    <button onClick={handleClick}>{text}</button>
   )
 }
 
 // StatisticLine komponentti
-const StatisticLine = (props) => {
-  const text = props.text
-  const value = props.value
+const StatisticLine = ({text, value}) => {
   
   return (
     <tr>
       <td>{text}</td>
       <td>{value}</td>
     </tr>
-
   )
 }
 
@@ -69,25 +57,18 @@ const StatisticLine = (props) => {
 
 const App = () => {
 
-  //sovelluksen tila
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
   const [bad, setBad] = useState(0)
 
   return (
-    <div>
+    <>
       <h1>give feedback</h1>
-      <div>
-
         <Button handleClick={() => setGood(good + 1)} text='good' />
         <Button handleClick={() => setNeutral(neutral + 1)} text='neutral' />
         <Button handleClick={() => setBad(bad + 1)} text='bad' />
-
         <Statistics good={good} neutral={neutral} bad={bad} />
-
-      </div>
-
-    </div>
+    </>
   )
 }
 

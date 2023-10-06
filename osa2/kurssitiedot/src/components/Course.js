@@ -1,78 +1,55 @@
-// Course komponentti, minkä tehtävä on renderöidä kurssin nimi, osat ja tehtävien yhteismäärä
-const Course = (props) => {
+const Course = ({ courses }) => { // component that renders a course from array of objects
 
-    //propsin sisältö, courses lista, mikä sisältää objekteja
-    const courses = props.courses //propsien sisältö tallennetaan course muuttujaan, ettei propsia tarvitse jatkossa kirjoittaa joka kerta
-
-    //renderöidään kurssin nimi, contentti ja tehtävien yhteismäärä, tulevat propsina kurssin objektista mikä on listan sisällä
-    //iteroidaan lista mikä sisältää objekteja, jotta saadaan kaikki kurssit näkyviin, luodaan uniikki indeksinro jokaiselle kurssille
-    return (
-        <div>
-            {courses.map((kurssi, i) =>
-                <div key={i}>
-                    <Header name={kurssi.name} />
-                    <Content parts={kurssi.parts} />
-                    <Total parts={kurssi.parts} />
-                </div>)
-            }
-        </div>
-    )
+  return (
+    <>
+      {courses.map((kurssi, i) =>
+        <div key={i}>
+          <Header name={kurssi.name} />
+          <Content parts={kurssi.parts} />
+          <Total parts={kurssi.parts} />
+        </div>)
+      }
+    </>
+  )
 }
 
 
-
-// Header komponentti, minkä tehtävä on renderöidä kurssin nimi
-const Header = (props) => {
-    return <h1>{props.name}</h1>
+const Header = ({ name }) => { // component that renders a course name
+  return <h1>{name}</h1>
 }
 
 
+const Content = ({ parts }) => { // component that renders course parts
 
-// Content komponentti, minkä tehtävä on renderöidä osat
-const Content = (props) => {
-
-    //propsien sisältö, parts lista
-    const contents = props.parts
-
-    //renderöidään osat
-    return (
-        <div>
-            {contents.map((osa, i) => <Part key={i} name={osa.name} exercises={osa.exercises} />)}
-        </div>
-    )
+  return (
+    <>
+      {parts.map((osa, i) => <Part key={i} name={osa.name} exercises={osa.exercises} />)}
+    </>
+  )
 }
 
 
-
-// Part komponentti, minkä tehtävä on renderöidä yhden osan nimi ja osan tehtävien määrä
-const Part = (props) => {
-    //renderöidään osan nimi ja tehtävien määrä
-    return (
-        <div>
-            <p>{props.name} {props.exercises}</p>
-        </div>
-    )
+const Part = ({ name, exercises }) => { // renders a one part of a course
+  return (
+    <>
+      <p>{name} {exercises}</p>
+    </>
+  )
 }
 
 
-// Total komponentti, minkä tehtävä on renderöidä tehtävien yhteismäärä
-const Total = (props) => {
+const Total = ({ parts }) => { // component that renders total number of exercises
 
-    const content = props.parts //propsien sisältö, parts lista luodaan content muuttujaan nimeltä content
+  const total = parts.reduce((sum, osa) => { // calculate total number of exercises with reduce method
+    return sum + osa.exercises
+  }, 0)
 
-    //tehtävien yhteismäärä lasketaan reduce metodilla, joka ottaa parametreina summan arvon ja nykyisen arvon, mikä lisätään summaan
-    const total = content.reduce((sum, osa) => { //lasketaan reduce funktiolla tehtävien yhteismäärä
-        return sum + osa.exercises
-    }, 0)
-
-    //renderöidään yhteismäärä
-    return (
-        <div>
-            <h2>total of {total} exercises</h2>
-        </div>
-    )
+  return (
+    <>
+      <h2>total of {total} exercises</h2>
+    </>
+  )
 }
 
 
-// Exportataan Course komponentti App.js tiedostoon
 export default Course

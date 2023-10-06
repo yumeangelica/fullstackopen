@@ -1,8 +1,6 @@
-// komponentti joka renderöi lomakkeen millä lisätään uusi henkilö
-
 import { Form, Button } from 'react-bootstrap'
 
-const NewPersonForm = (props) => {
+const NewPersonForm = (props) => { // component that renders the form for adding new persons
     return (
         <>
             <Form onSubmit={props.functions[0]}>
@@ -32,9 +30,7 @@ const NewPersonForm = (props) => {
                         className="input-width"
                     />
 
-
                     <Button variant="primary" type="submit" className="submit-btn">add</Button>
-
 
                 </Form.Group>
             </Form>
@@ -42,5 +38,4 @@ const NewPersonForm = (props) => {
     )
 }
 
-// Exportataan komponentti App.js tiedostoon
 export default NewPersonForm  

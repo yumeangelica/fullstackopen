@@ -1,6 +1,4 @@
-// Importataan Kurssi-komponentti moduulista
 import Course from "./components/Course"
-
 
 const App = () => {
   const courses = [
@@ -48,18 +46,15 @@ const App = () => {
     },
   ]
 
-  // Renderöidään kurssit listasta mikä sisältää objekteja
+
+  // renders all courses from array of objects
   return (
-    <div>
+    <>
       <Course courses={courses} />
-    </div>
+    </>
   )
 }
 
 
 
-
-
-
-// Exportataan App komponentti index.js tiedostoon
 export default App

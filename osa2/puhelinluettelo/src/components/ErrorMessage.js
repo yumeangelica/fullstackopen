@@ -1,16 +1,9 @@
-
-
-// Komponentti joka renderöi virheilmoituksen
-
-// Propsina message ja errorhappened muuttujat
 const ErrorMessage = ({ message, errorhappened }) => {
-    // jos virheilmoitus on null, ei renderöidä mitään
-    if (message === null) {
+    if (message === null) { // if message is null, return null
         return null
     }
 
-    // jos errorhappened on true, eli tapahtuu fail, niin asetetaan virheilmoitukselle punainen tausta
-    else if (errorhappened) {
+    else if (errorhappened) { // if errorhappened is true, message is red
         return (
             <div className="error_red">
                 {message}
@@ -18,8 +11,8 @@ const ErrorMessage = ({ message, errorhappened }) => {
         )
     }
 
-    // muuten virheilmoitukselle vihreä tausta
-    else {
+
+    else { // if errorhappened is false, message is green
         return (
             <div className="error">
                 {message}
@@ -29,5 +22,4 @@ const ErrorMessage = ({ message, errorhappened }) => {
 }
 
 
-// Exportataan komponentti App.js tiedostoon
 export default ErrorMessage
